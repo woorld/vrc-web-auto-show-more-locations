@@ -1,0 +1,16 @@
+{
+  "name": "VRChatのWebで自動的にShow More Locationsを押すやつ",
+  "version": "1.0.0",
+  "description": "その名の通りの機能",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": [
+        "https://vrchat.com/"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
+}
