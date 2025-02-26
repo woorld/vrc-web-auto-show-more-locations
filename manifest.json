@@ -6,7 +6,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://vrchat.com/home"
+        "https://vrchat.com/*"
       ],
       "js": [
         "content.js"
