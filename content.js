@@ -36,15 +36,18 @@ const bodyObserver = new MutationObserver(() => {
   }
 
   if (isSetButtonParentObserver && isSetScrollEvent) {
-    // ボタンの親要素の取得後にその要素がなくなった場合のフォロー
-    // /home→/home/locationsまたはその逆の遷移で発生
-    if (!document.contains(buttonParent)) {
-      buttonParent = document.querySelector(BUTTON_PARENT_SELECTOR);
-      buttonParentObserver.disconnect();
-      observeButtonParent(buttonParent);
+    // ボタンの親要素の取得後にその要素がなくなった場合のフォロー（/home→/home/locationsまたはその逆の遷移で発生）
+    if (document.contains(buttonParent)) {
+      return;
     }
 
-    return;
+    buttonParent = document.querySelector(BUTTON_PARENT_SELECTOR);
+    if (buttonParent == null) {
+      return;
+    }
+
+    buttonParentObserver.disconnect();
+    observeButtonParent(buttonParent);
   }
 
   // 自動押下するボタンの親要素を取得
@@ -65,21 +68,7 @@ const bodyObserver = new MutationObserver(() => {
       return;
     }
 
-    scrollElement.addEventListener('scroll', () => {
-      if (nextClickButton == null) {
-        return;
-      }
-
-      const buttonRect = nextClickButton.getBoundingClientRect();
-      const isButtonVisible = window.innerHeight - buttonRect.top >= 0;
-
-      if (isButtonVisible) {
-        // TODO: イベント設定時、ボタンがすでに画面内にあった場合に押下する処理を追加
-        // /home→/home/locationsまたはその逆の遷移で発生
-        nextClickButton.click();
-      }
-    });
-
+    scrollElement.addEventListener('scroll', onScroll);
     isSetScrollEvent = true;
   }
 });
@@ -99,4 +88,17 @@ const onChangeButtonParent = (observeTarget) => {
   }
 
   nextClickButton = showMoreLocationsButton;
+};
+
+const onScroll = () => {
+  if (nextClickButton == null) {
+    return;
+  }
+
+  const buttonRect = nextClickButton.getBoundingClientRect();
+  const isButtonVisible = window.innerHeight - buttonRect.top >= 0;
+
+  if (isButtonVisible) {
+    nextClickButton.click();
+  }
 };
