@@ -7,43 +7,49 @@ const OBSERVER_CONFIG = Object.freeze({
 });
 
 let currentUrl = location.href;
-let nextClickButton = null;
-let scrollElement = null;
+
 let isSetButtonParentObserver = false;
 let isSetScrollEvent = false;
 
+let buttonParent = null;
+let nextClickButton = null;
+let scrollElement = null;
+
+let buttonParentObserver = null;
+
 // ボタン自動押下に必要な処理の実行、ページURLの監視
 const bodyObserver = new MutationObserver(() => {
-  console.log({ // TODO: test
-    nextClickButton,
-    scrollElement,
-    isSetButtonParentObserver,
-    isSetScrollEvent,
-  });
-
   // 別ページに遷移した場合は各フラグ・値をリセット
   if (location.href !== currentUrl) {
-    console.log('reset'); // TODO: test
-
-    nextClickButton = null;
-    scrollElement = null;
     isSetButtonParentObserver = false;
     isSetScrollEvent = false;
+    buttonParent = null;
+    nextClickButton = null;
+    scrollElement = null;
+    // buttonParentObserverはリセットしない
 
     currentUrl = location.href;
   }
 
-  if (!location.href.match(ENABLE_URL_REGEX) || isSetButtonParentObserver && isSetScrollEvent) {
+  if (!location.href.match(ENABLE_URL_REGEX)) {
+    return;
+  }
+
+  if (isSetButtonParentObserver && isSetScrollEvent) {
+    // ボタンの親要素の取得後にその要素がなくなった場合のフォロー
+    // /home→/home/locationsまたはその逆の遷移で発生
+    if (!document.contains(buttonParent)) {
+      buttonParent = document.querySelector(BUTTON_PARENT_SELECTOR);
+      buttonParentObserver.disconnect();
+      observeButtonParent(buttonParent);
+    }
+
     return;
   }
 
   // 自動押下するボタンの親要素を取得
   if (!isSetButtonParentObserver) {
-    /*
-     * TODO: home→locations, locations→homeの遷移後に再取得する際、
-     * 取得時点では存在していてもその後要素が置き換わってしまいボタンが取得できなくなるのを修正
-     */
-    const buttonParent = document.querySelector(BUTTON_PARENT_SELECTOR);
+    buttonParent = document.querySelector(BUTTON_PARENT_SELECTOR);
     if (buttonParent == null) {
       return;
     }
@@ -68,6 +74,8 @@ const bodyObserver = new MutationObserver(() => {
       const isButtonVisible = window.innerHeight - buttonRect.top >= 0;
 
       if (isButtonVisible) {
+        // TODO: イベント設定時、ボタンがすでに画面内にあった場合に押下する処理を追加
+        // /home→/home/locationsまたはその逆の遷移で発生
         nextClickButton.click();
       }
     });
@@ -78,16 +86,17 @@ const bodyObserver = new MutationObserver(() => {
 
 bodyObserver.observe(document.body, OBSERVER_CONFIG);
 
+// NOTE: 監視対象を引数に取ってるけど、トップレベルで宣言してるから不要かも？
 const observeButtonParent = (observeTarget) => {
-  const observer = new MutationObserver(() => {
-    const showMoreLocationsButton = observeTarget.querySelector(SHOW_MORE_LOCATIONS_BUTTON_SELECTOR);
-    if (showMoreLocationsButton == null) {
-      return;
-    }
+  buttonParentObserver = new MutationObserver(() => onChangeButtonParent(observeTarget));
+  buttonParentObserver.observe(observeTarget, OBSERVER_CONFIG);
+};
 
-    nextClickButton = showMoreLocationsButton;
-  });
+const onChangeButtonParent = (observeTarget) => {
+  const showMoreLocationsButton = observeTarget.querySelector(SHOW_MORE_LOCATIONS_BUTTON_SELECTOR);
+  if (showMoreLocationsButton == null) {
+    return;
+  }
 
-  // TODO: ページ遷移時にdisconnect()しなくてもよいのか？
-  observer.observe(observeTarget, OBSERVER_CONFIG);
+  nextClickButton = showMoreLocationsButton;
 };
