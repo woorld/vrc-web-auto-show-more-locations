@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div align="center">
   <img
     src="https://github.com/user-attachments/assets/b0b60dc7-4eda-4aad-9d66-e42c1b17c5e3"
     alt="ロゴ"
