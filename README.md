@@ -6,6 +6,10 @@
   />
   <h1>VRChatのWebで自動的にShow More Locationsを押すやつ</h1>
   <p><a href="https://vrchat.com/home">VRChatのWeb</a>で、Show More Locationsボタンの押下を自動化するChrome拡張機能です。</p>
+  <img
+    src="https://github.com/user-attachments/assets/236e58f2-ced5-4b48-8c53-f133bee139db"
+    alt="動作の様子を表すGIF画像"
+  />
 </div>
 
 ## インストール
