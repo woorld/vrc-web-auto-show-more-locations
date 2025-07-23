@@ -1,6 +1,6 @@
 {
   "name": "VRChatのWebで自動的にShow More Locationsを押すやつ",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "その名の通りの機能",
   "manifest_version": 3,
   "content_scripts": [
