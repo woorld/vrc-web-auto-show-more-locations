@@ -1,6 +1,6 @@
 <div align="center">
   <img
-    src="https://github.com/user-attachments/assets/b0b60dc7-4eda-4aad-9d66-e42c1b17c5e3"
+    src="https://github.com/user-attachments/assets/98750aa3-5060-4a4c-bca0-cd9eb1d68535"
     alt="ロゴ"
     style="width: 128px; height: 128px;"
   />
