@@ -1,4 +1,4 @@
-const SHOW_MORE_LOCATIONS_BUTTON_SELECTOR = 'button.w-100.css-1vrq36y.e7cdgnz1';
+const SHOW_MORE_LOCATIONS_BUTTON_SELECTOR = 'button.w-100.css-1xtd5yx.e7cdgnz1';
 const BUTTON_PARENT_SELECTOR = 'div.css-1fttcpj.e18c1r7j44:has(.locations)'; // <button>の親というよりはdiv.location
 const ENABLE_URL_REGEX = /^https:\/\/vrchat\.com\/home(|\/|\/locations\/?)$/;
 const OBSERVER_CONFIG = Object.freeze({
